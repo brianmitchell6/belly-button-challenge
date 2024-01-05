@@ -17,21 +17,31 @@ function init() {
             option.textContent = belly.names[i];
             dropdownMenu.add(option);
         }
+
+        //Select first subject data
         bellyslice = belly.samples[0];
+        //Convert to array and pair down to first ten values
         valueslice = Object.values(bellyslice.sample_values);
+        valueslice = valueslice.slice(0,10);
 
-        console.log(valueslice.slice(0,10));
+        //Convert to array, pair down to first ten values, convert to string, add 'OTU'
+        otuslice = Object.values(bellyslice.otu_ids);
+        otuslice = otuslice.slice(0,10);
+        for (i=0; i < 10; i++) {
+            otuslice[i] = "OTU " + String(otuslice[i]);
+        }
 
-        valueslice = bellyslice.sample_values;
-        console.log(valueslice);
-
-        console.log(bellyslice.otu_ids);
         //Plot the initial subject values
         data = [{
             type: 'bar',
-            x: belly.samples[0].sample_values,
-            y: belly.samples[0].otu_ids,
-            orientation: 'h'
+            x: valueslice,
+            y: otuslice,
+            orientation: 'h',
+            transforms: [{
+                type: 'sort',
+                target: 'y',
+                order: 'descending'
+            }]
         }];
     
         Plotly.newPlot('bar', data);
