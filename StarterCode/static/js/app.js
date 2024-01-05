@@ -31,11 +31,19 @@ function init() {
             otuslice[i] = "OTU " + String(otuslice[i]);
         }
 
-        //Plot the initial subject values
+        //Convert to array, pair down to first ten values, convert to string
+        labelslice = Object.values(bellyslice.otu_labels);
+        labelslice = labelslice.slice(0,10);
+        for (i=0; i < 10; i++) {
+            labelslice[i] = String(labelslice[i]);
+        }
+        
+        //Plot the initial subject values as horizontal bar chart
         data = [{
             type: 'bar',
             x: valueslice,
             y: otuslice,
+            text: labelslice,
             orientation: 'h',
             transforms: [{
                 type: 'sort',
@@ -46,6 +54,30 @@ function init() {
     
         Plotly.newPlot('bar', data);
 
+        //Select first subject data
+        bellyslice = belly.samples[0];
+        //Convert to array 
+        valueslice = Object.values(bellyslice.sample_values);
+        //Convert to array
+        otuslice = Object.values(bellyslice.otu_ids);
+        //Convert to array, convert to string
+        labelslice = Object.values(bellyslice.otu_labels);
+        for (i=0; i < labelslice.length; i++) {
+            labelslice[i] = String(labelslice[i]);
+        }
+
+        data = [{
+            x: otuslice,
+            y: valueslice,
+            text: labelslice,
+            mode: 'markers',
+            marker: {
+                size: valueslice,
+                color: otuslice
+            }
+        }];
+
+        Plotly.newPlot('bubble', data);
 
     });
 }
